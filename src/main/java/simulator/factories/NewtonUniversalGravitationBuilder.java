@@ -1,11 +1,8 @@
 	package simulator.factories;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import simulator.misc.Vector2D;
 import simulator.model.ForceLaws;
-import simulator.model.MovingTowardsFixedPoint;
 import simulator.model.NewtonUniversalGravitation;
 
 public class NewtonUniversalGravitationBuilder extends Builder<ForceLaws> {

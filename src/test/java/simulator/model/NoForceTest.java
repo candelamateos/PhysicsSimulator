@@ -8,6 +8,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import simulator.misc.Vector2D;
+import simulator.model.Body;
+import simulator.model.ForceLaws;
+import simulator.model.MovingBody;
+import simulator.model.NoForce;
+import simulator.model.StationaryBody;
 
 class NoForceTest {
 

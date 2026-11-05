@@ -57,7 +57,7 @@ public abstract class Body {
 
 	// aÃ±ade la fuerza f al vector de fuerza del cuerpo (usando el mÃ©todo plus
 	// de la clase Vector2D)
-	void addForce(Vector2D f) {
+	public void addForce(Vector2D f) {
 		this.force = this.force.plus(f);
 	}
 
@@ -67,7 +67,7 @@ public abstract class Body {
 
 	// mueve el cuerpo durante t segundos (las implementaciones estÃ¡n en las
 	// sub-clases).
-	abstract void advance(double t);
+	public abstract void advance(double t);
 
 	// devuelve la siguiente informaciÃ³n del cuerpo en formato JSON (como
 	// JSONObject): { â€œid": id, "m": m, "p": p->, "v": v-> , "f": f-> }

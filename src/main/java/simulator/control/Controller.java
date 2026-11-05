@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import simulator.factories.Factory;
-import simulator.model.BodiesGroup;
 import simulator.model.Body;
 import simulator.model.ForceLaws;
 import simulator.model.PhysicsSimulator;

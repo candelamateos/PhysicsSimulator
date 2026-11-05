@@ -1,7 +1,5 @@
 package simulator.factories;
 
-import java.util.Collection;
-
 import org.json.JSONObject;
 
 public abstract class Builder<T> {

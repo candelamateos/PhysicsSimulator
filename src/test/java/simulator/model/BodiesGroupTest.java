@@ -3,11 +3,19 @@ package simulator.model;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import simulator.misc.Vector2D;
+import simulator.model.BodiesGroup;
+import simulator.model.MovingBody;
+import simulator.model.MovingTowardsFixedPoint;
+import simulator.model.NewtonUniversalGravitation;
+import simulator.model.StationaryBody;
+import simulator.model.Body;
+
 
 class BodiesGroupTest {
 

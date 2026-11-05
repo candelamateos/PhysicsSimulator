@@ -9,6 +9,7 @@ public class StationaryBody extends Body {
 	}
 
 	@Override
+	public
 	void advance(double t) {
 		// TODO Auto-generated method stub
 		

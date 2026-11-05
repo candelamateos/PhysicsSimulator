@@ -9,6 +9,7 @@ public class MovingBody extends Body {
 	}
 
 	@Override
+	public
 	void advance(double t) {
 		Vector2D a = new Vector2D();
 		if (this.mass != 0)

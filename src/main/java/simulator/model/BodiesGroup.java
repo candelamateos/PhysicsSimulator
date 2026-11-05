@@ -14,7 +14,7 @@ public class BodiesGroup implements Iterable<Body>{
 	private ArrayList<Body> bodies;
 	private List<Body> bodiesRO;
 	
-	BodiesGroup(String id, ForceLaws fl) {
+	public BodiesGroup(String id, ForceLaws fl) {
 		if (id == null || fl == null || id.trim().length() == 0)
 			throw new IllegalArgumentException();
 		else {
@@ -29,7 +29,7 @@ public class BodiesGroup implements Iterable<Body>{
 		return this.id;
 	}
 
-	void setForceLaws(ForceLaws fl) {
+	public void setForceLaws(ForceLaws fl) {
 		if (fl == null)
 			throw new IllegalArgumentException();
 		else {
@@ -37,7 +37,7 @@ public class BodiesGroup implements Iterable<Body>{
 		}
 	}
 
-	void addBody(Body b) {
+	public void addBody(Body b) {
 		if (b == null)
 			throw new IllegalArgumentException();
 		else {
@@ -49,7 +49,7 @@ public class BodiesGroup implements Iterable<Body>{
 		}
 	}
 
-	void advance(double dt) {
+	public void advance(double dt) {
 		if (dt <= 0)
 			throw new IllegalArgumentException();
 		for (Body b : bodies) {

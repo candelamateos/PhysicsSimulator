@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+
 import simulator.misc.Vector2D;
 import simulator.model.BodiesGroup;
 import simulator.model.Body;

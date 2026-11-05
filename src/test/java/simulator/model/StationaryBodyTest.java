@@ -3,6 +3,7 @@ package simulator.model;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
