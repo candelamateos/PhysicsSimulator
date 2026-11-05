@@ -98,7 +98,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_toolaBar.addSeparator();
 		_loadButton = new JButton();
 		_loadButton.setToolTipText("Load");
-		_loadButton.setIcon(loadImage("resources/icons/open.png"));
+		_loadButton.setIcon(loadImage("icons/open.png"));
 		_loadButton.addActionListener((e) -> openFile(this));
 		_toolaBar.add(_loadButton);
 		_toolaBar.addSeparator();
@@ -108,7 +108,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_toolaBar.addSeparator();
 		_physicsButton = new JButton();
 		_physicsButton.setToolTipText("Physics");
-		_physicsButton.setIcon(loadImage("resources/icons/physics.png"));
+		_physicsButton.setIcon(loadImage("icons/physics.png"));
 		_physicsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -122,7 +122,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 // Boton viewer
 		_viewerButton = new JButton();
 		_viewerButton.setToolTipText("viewer");
-		_viewerButton.setIcon(loadImage("resources/icons/viewer.png"));
+		_viewerButton.setIcon(loadImage("icons/viewer.png"));
 		_viewerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -145,14 +145,14 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_toolaBar.addSeparator();
 		_runButton = new JButton();
 		_runButton.setToolTipText("run");
-		_runButton.setIcon(loadImage("resources/icons/run.png"));
+		_runButton.setIcon(loadImage("icons/run.png"));
 		_runButton.addActionListener((e) -> run(n, dt));
 		_toolaBar.add(_runButton);
 
 // Boton stop
 		_stopButton = new JButton();
 		_stopButton.setToolTipText("stop");
-		_stopButton.setIcon(loadImage("resources/icons/stop.png"));
+		_stopButton.setIcon(loadImage("icons/stop.png"));
 		_stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -180,7 +180,7 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 		_toolaBar.addSeparator();
 		_quitButton = new JButton();
 		_quitButton.setToolTipText("Quit");
-		_quitButton.setIcon(loadImage("resources/icons/exit.png"));
+		_quitButton.setIcon(loadImage("icons/exit.png"));
 		_quitButton.addActionListener((e) -> Utils.quit(this));
 		_toolaBar.add(_quitButton);
 
@@ -243,6 +243,14 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 	}
 
 	protected ImageIcon loadImage(String path) {
-		return new ImageIcon(Toolkit.getDefaultToolkit().createImage(path));
+	    // Asegura que la ruta empiece por '/' para buscar desde la raíz de src/main/resources
+	    String resourcePath = path.startsWith("/") ? path : "/" + path;
+	    java.net.URL url = getClass().getResource(resourcePath);
+	    
+	    if (url == null) {
+	        System.err.println("No se encontró el recurso de imagen: " + resourcePath);
+	        return null;
+	    }
+	    return new ImageIcon(url);
 	}
 }
