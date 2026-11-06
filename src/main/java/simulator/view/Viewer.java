@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 
@@ -26,72 +27,80 @@ class Viewer extends SimulationViewer {
 	private static final int _WIDTH = 500;
 	private static final int _HEIGHT = 500;
 
-	// (_centerX,_centerY) is used as the origin when drawing
-	// the bodies
 	private int _centerX;
 	private int _centerY;
-
-	// values used to shift the actual origin (the middle of
-	// the window), when calculating (_centerX,_centerY)
 	private int _originX = 0;
 	private int _originY = 0;
-
-	// the scale factor, used to reduce the bodies coordinates
-	// to the size of the component
 	private double _scale = 1.0;
 
-	// indicates if the help message should be shown
 	private boolean _showHelp = true;
-
-	// indicates if the position/velocity vectors should be shown
 	private boolean _showVectors = true;
 
-	// the list bodies and groups
 	private List<Body> _bodies;
 	private List<BodiesGroup> _groups;
 
-	// a color generator, and a map that assigns colors to groups
 	private ColorsGenerator _colorGen;
 	private Map<String, Color> _gColor;
 
-	// the index and Id of the selected group, -1 and null means all groups
 	private int _selectedGroupIdx = -1;
 	private String _selectedGroup = null;
 
+	// Lista de estrellas para el fondo espacial
+	private List<Star> _stars;
+
+	private static class Star {
+		int x, y, size;
+		Color color;
+
+		Star(int x, int y, int size, Color color) {
+			this.x = x;
+			this.y = y;
+			this.size = size;
+			this.color = color;
+		}
+	}
+
 	Viewer() {
 		initGUI();
+		initStarfield();
+	}
+
+	private void initStarfield() {
+		_stars = new ArrayList<>();
+		Random rand = new Random(42);
+		int numStars = 250;
+
+		for (int i = 0; i < numStars; i++) {
+			int x = rand.nextInt(2500);
+			int y = rand.nextInt(2500);
+			int size = rand.nextInt(3) + 1;
+			int alpha = rand.nextInt(155) + 100;
+
+			Color[] starColors = {
+				new Color(255, 255, 255, alpha),
+				new Color(200, 220, 255, alpha),
+				new Color(255, 240, 200, alpha)
+			};
+			_stars.add(new Star(x, y, size, starColors[rand.nextInt(starColors.length)]));
+		}
 	}
 
 	private void initGUI() {
+		setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 
-		// add a border
-		setBorder(BorderFactory.createLineBorder(Color.black, 2));
-
-		// initialize the color generator, and the map, that we use
-		// assign colors to groups
 		_colorGen = new ColorsGenerator();
 		_gColor = new HashMap<>();
 
-		// initialize the lists of bodies and groups
 		_bodies = new ArrayList<>();
 		_groups = new ArrayList<>();
 
-		// The preferred and minimum size of the components
 		setMinimumSize(new Dimension(_WIDTH, _HEIGHT));
 		setPreferredSize(new Dimension(_WIDTH, _HEIGHT));
 
-		// add a key listener to handle the user actions
 		addKeyListener(new KeyListener() {
+			@Override public void keyTyped(KeyEvent e) {}
+			@Override public void keyReleased(KeyEvent e) {}
 
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-
-			
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyChar()) {
@@ -149,34 +158,17 @@ class Viewer extends SimulationViewer {
 					}
 					repaint();
 					break;
-
 				default:
 				}
 			}
 		});
 
 		addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				requestFocus();
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
+			@Override public void mouseReleased(MouseEvent e) {}
+			@Override public void mousePressed(MouseEvent e) {}
+			@Override public void mouseExited(MouseEvent e) {}
+			@Override public void mouseEntered(MouseEvent e) { requestFocus(); }
+			@Override public void mouseClicked(MouseEvent e) {}
 		});
 		repaint();
 	}
@@ -185,119 +177,166 @@ class Viewer extends SimulationViewer {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		// a better graphics object
 		Graphics2D gr = (Graphics2D) g;
 		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		gr.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		// calculate the center
+		// 1. Fondo negro espacial
+		gr.setColor(new Color(8, 8, 16));
+		gr.fillRect(0, 0, getWidth(), getHeight());
+
+		// 2. Dibujar estrellas
+		if (_stars != null) {
+			for (Star star : _stars) {
+				gr.setColor(star.color);
+				gr.fillOval(star.x % getWidth(), star.y % getHeight(), star.size, star.size);
+			}
+		}
+
 		_centerX = getWidth() / 2 - _originX;
 		_centerY = getHeight() / 2 - _originY;
 
-		// TODO draw red cross at (_centerX,_centerY)
-		gr.setColor(Color.red);
+		// Cruz central neón
+		gr.setColor(new Color(255, 60, 60, 200));
 		gr.drawLine(_centerX - 5, _centerY, _centerX + 5, _centerY);
 		gr.drawLine(_centerX, _centerY - 5, _centerX, _centerY + 5);
 
-		// draw bodies
+		// Dibujar cuerpos
 		drawBodies(gr);
 
-		// show help if needed
 		if (_showHelp) {
 			showHelp(gr);
 		}
 	}
 
 	private void showHelp(Graphics2D g) {
-		g.setColor(Color.red);
+		g.setColor(new Color(220, 220, 220));
 		g.drawString("h: toggle help, v: toggle vectors, +: zoom-in, -: zoom-out, =: fit", 10, 15);
 		g.drawString("g: show next group", 10, 35);
 		g.drawString("l: move right, j: move left, i: move up, m: move down: k: reset", 10, 55);
 		g.drawString("Scaling ratio:  " + _scale, 10, 75);
 		String s = _selectedGroup == null ? "all" : _selectedGroup;
-		g.setColor(Color.blue);
+		g.setColor(new Color(100, 190, 255));
 		g.drawString("Selected Group: " + s, 10, 95);
 	}
 
 	private void drawBodies(Graphics2D g) {
-		
-		for (Body b : _bodies) {
-			if (isVisible(b)) {
+		// Copia local para evitar modificacion concurrente durante el redibujado
+		List<Body> bodiesCopy = new ArrayList<>(_bodies);
+
+		for (Body b : bodiesCopy) {
+			if (b != null && isVisible(b)) {
 				Vector2D p = b.getPosition();
+				if (p == null) continue;
+
 				int x = _centerX + (int) (p.getX() / _scale);
 				int y = _centerY - (int) (p.getY() / _scale);
 
 				if (_showVectors) {
-					//Vector velocidad
-					Vector2D v = b.getVelocity().direction().scale(20);
-					int x2 = x + (int) v.getX();
-					int y2 = y - (int) v.getY();
-					drawLineWithArrow(g, x, y, x2, y2, 3, 3, Color.GREEN, Color.GREEN);
-				
-					//Vector fuerza
-					Vector2D f = b.getForce().direction().scale(20);
-					int x3 = x + (int) f.getX();
-					int y3 = y - (int) f.getY();
-					drawLineWithArrow(g, x, y, x3, y3, 3, 3, Color.RED, Color.RED);
+					
+					if (b.getVelocity() != null && b.getVelocity().magnitude() > 0) {
+						Vector2D v = b.getVelocity().direction().scale(20);
+						int x2 = x + (int) v.getX();
+						int y2 = y - (int) v.getY();
+						drawLineWithArrow(g, x, y, x2, y2, 3, 3, new Color(50, 255, 120), new Color(50, 255, 120));
+					}
+
+					if (b.getForce() != null && b.getForce().magnitude() > 0) {
+						Vector2D f = b.getForce().direction().scale(20);
+						int x3 = x + (int) f.getX();
+						int y3 = y - (int) f.getY();
+						drawLineWithArrow(g, x, y, x3, y3, 3, 3, new Color(255, 70, 70), new Color(255, 70, 70));
+					}
 				}
 
-				g.setColor(_gColor.get(b.getgId()));
+				
+				Color bodyColor = getBodyColor(b);
+				g.setColor(bodyColor);
 				g.fillOval(x - 5, y - 5, 11, 11);
-				g.setColor(Color.black);
-				g.drawString(b.getId(), x, y - 12);
+
+				g.setColor(bodyColor.brighter());
+				g.drawOval(x - 5, y - 5, 11, 11);
+
+				if (b.getId() != null) {
+					g.setColor(Color.WHITE);
+					g.drawString(b.getId(), x + 7, y + 4);
+				}
 			}
 		}
-		
-		
+	}
+
+	private Color getBodyColor(Body b) {
+		if (b == null || b.getId() == null) {
+			return new Color(0, 220, 255);
+		}
+
+		String id = b.getId().toLowerCase();
+
+		if (id.contains("sun") || id.contains("sol") || id.contains("a3")) return new Color(255, 215, 0);
+		if (id.contains("mercury") || id.contains("mercurio")) return new Color(180, 180, 180);
+		if (id.contains("venus")) return new Color(230, 190, 130);
+		if (id.contains("earth") || id.contains("tierra") || id.contains("a1")) return new Color(60, 140, 240);
+		if (id.contains("mars") || id.contains("marte")) return new Color(230, 70, 50);
+		if (id.contains("jupiter") || id.contains("a2")) return new Color(210, 130, 60);
+		if (id.contains("saturn") || id.contains("saturno")) return new Color(220, 200, 120);
+		if (id.contains("uranus") || id.contains("urano")) return new Color(100, 220, 220);
+		if (id.contains("neptune") || id.contains("neptuno")) return new Color(40, 90, 220);
+
+		if (b.getgId() != null && _gColor.containsKey(b.getgId())) {
+			Color gCol = _gColor.get(b.getgId());
+			if (gCol != null) return gCol;
+		}
+
+		return new Color(0, 220, 255);
 	}
 
 	private boolean isVisible(Body b) {
-		if(_selectedGroup == null || _selectedGroup.equals(b.getgId()))
-		return true;
-		else {
-		return false;
-		}
+		return b != null && (_selectedGroup == null || _selectedGroup.equals(b.getgId()));
 	}
 
-	// calculates a value for scale such that all visible bodies fit in the window
 	private void autoScale() {
-
 		double max = 1.0;
 
 		for (Body b : _bodies) {
-			Vector2D p = b.getPosition();
-			max = Math.max(max, Math.abs(p.getX()));
-			max = Math.max(max, Math.abs(p.getY()));
+			if (b != null && b.getPosition() != null) {
+				Vector2D p = b.getPosition();
+				max = Math.max(max, Math.abs(p.getX()));
+				max = Math.max(max, Math.abs(p.getY()));
+			}
 		}
 
 		double size = Math.max(1.0, Math.min(getWidth(), getHeight()));
-
 		_scale = max > size ? 4.0 * max / size : 1.0;
 	}
 
 	@Override
 	public void addGroup(BodiesGroup g) {
-		_groups.add(g);
-		for(Body b: g)
-			_bodies.add(b);
-		_gColor.put(g.getId(), _colorGen.nextColor()); // assign color to group
-		autoScale();
-		update();
+		if (g != null) {
+			_groups.add(g);
+			for (Body b : g) {
+				if (b != null) _bodies.add(b);
+			}
+			_gColor.put(g.getId(), _colorGen.nextColor());
+			autoScale();
+			update();
+		}
 	}
 
 	@Override
 	public void addBody(Body b) {
-		_bodies.add(b);
-		autoScale();
-		update();
+		if (b != null) {
+			_bodies.add(b);
+			autoScale();
+			update();
+		}
 	}
 
 	@Override
 	public void reset() {
-	    _groups.clear();
-	    _bodies.clear();
-	    _gColor.clear();
-		_colorGen.reset(); // reset the color generator
+		_groups.clear();
+		_bodies.clear();
+		_gColor.clear();
+		_colorGen.reset();
 		_selectedGroupIdx = -1;
 		_selectedGroup = null;
 		update();
@@ -308,18 +347,11 @@ class Viewer extends SimulationViewer {
 		repaint();
 	}
 
-	// This method draws a line from (x1,y1) to (x2,y2) with an arrow.
-	// The arrow is of height h and width w.
-	// The last two arguments are the colors of the arrow and the line
-	private void drawLineWithArrow(//
-			Graphics g, //
-			int x1, int y1, //
-			int x2, int y2, //
-			int w, int h, //
-			Color lineColor, Color arrowColor) {
-
+	private void drawLineWithArrow(Graphics g, int x1, int y1, int x2, int y2, int w, int h, Color lineColor, Color arrowColor) {
 		int dx = x2 - x1, dy = y2 - y1;
 		double D = Math.sqrt(dx * dx + dy * dy);
+		if (D == 0 || Double.isNaN(D)) return;
+
 		double xm = D - w, xn = xm, ym = h, yn = -h, x;
 		double sin = dy / D, cos = dx / D;
 
@@ -339,5 +371,4 @@ class Viewer extends SimulationViewer {
 		g.setColor(arrowColor);
 		g.fillPolygon(xpoints, ypoints, 3);
 	}
-
 }

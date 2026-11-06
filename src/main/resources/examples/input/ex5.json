@@ -1,0 +1,91 @@
+{
+  "groups" : [ "solar_system" ],
+  "laws" : [ {
+    "id" : "solar_system",
+    "laws" : {
+      "type" : "nlug",
+      "data" : { }
+    }
+  } ],
+  "bodies" : [ {
+    "type" : "st_body",
+    "data" : {
+      "id" : "sun",
+      "gid" : "solar_system",
+      "p" : [ 0.0, 0.0 ],
+      "m" : 1.989E30
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "mercury",
+      "gid" : "solar_system",
+      "p" : [ 5.79E10, 0.0 ],
+      "v" : [ 0.0, 47360.0 ],
+      "m" : 3.3011E23
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "venus",
+      "gid" : "solar_system",
+      "p" : [ 0.0, 1.082E11 ],
+      "v" : [ -35020.0, 0.0 ],
+      "m" : 4.8675E24
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "earth",
+      "gid" : "solar_system",
+      "p" : [ -1.496E11, 0.0 ],
+      "v" : [ 0.0, -29780.0 ],
+      "m" : 5.972E24
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "mars",
+      "gid" : "solar_system",
+      "p" : [ 0.0, -2.279E11 ],
+      "v" : [ 24070.0, 0.0 ],
+      "m" : 6.4171E23
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "jupiter",
+      "gid" : "solar_system",
+      "p" : [ 7.785E11, 0.0 ],
+      "v" : [ 0.0, 13070.0 ],
+      "m" : 1.898E27
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "saturn",
+      "gid" : "solar_system",
+      "p" : [ 0.0, 1.433E12 ],
+      "v" : [ -9680.0, 0.0 ],
+      "m" : 5.683E26
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "uranus",
+      "gid" : "solar_system",
+      "p" : [ -2.877E12, 0.0 ],
+      "v" : [ 0.0, -6800.0 ],
+      "m" : 8.681E25
+    }
+  }, {
+    "type" : "mv_body",
+    "data" : {
+      "id" : "neptune",
+      "gid" : "solar_system",
+      "p" : [ 0.0, -4.503E12 ],
+      "v" : [ 5430.0, 0.0 ],
+      "m" : 1.024E26
+    }
+  } ]
+}

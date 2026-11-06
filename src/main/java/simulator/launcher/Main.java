@@ -31,6 +31,8 @@ import simulator.model.Body;
 import simulator.model.ForceLaws;
 import simulator.model.PhysicsSimulator;
 import simulator.view.MainWindow;
+import simulator.view.Utils;
+
 
 public class Main {
 
@@ -54,6 +56,7 @@ public class Main {
 	private static Factory<Body> _bodyFactory;
 	private static Factory<ForceLaws> _forceLawsFactory;
 	private static Controller ctrl;
+	
 
 	private static void initFactories() {
 		ArrayList<Builder<Body>> bodyBuilders = new ArrayList<>();
@@ -279,13 +282,22 @@ public class Main {
 	}
 	
 	private static void startGUIMode() throws Exception {
-		ForceLaws forces = _forceLawsFactory.createInstance(_forceLawsInfo);
-		PhysicsSimulator fs = new PhysicsSimulator(forces, _dtime);
-		ctrl = new Controller(fs, _bodyFactory, _forceLawsFactory);
-		if (_inFile != null) {
-			ctrl.loadData(new FileInputStream(new File(_inFile)));
-		}
-		SwingUtilities.invokeAndWait(() -> new MainWindow(ctrl));
+	   
+	    com.formdev.flatlaf.FlatDarkLaf.setup();
+
+	    ForceLaws forces = _forceLawsFactory.createInstance(_forceLawsInfo);
+	    PhysicsSimulator fs = new PhysicsSimulator(forces, _dtime);
+	    ctrl = new Controller(fs, _bodyFactory, _forceLawsFactory);
+	    SwingUtilities.invokeAndWait(() -> new MainWindow(ctrl));
+	    
+	    if (_inFile != null) {
+            try {
+                ctrl.loadData(new FileInputStream(new File(_inFile)));
+            } catch (Exception e) {
+                Utils.showErrorMsg("No se pudo cargar el archivo inicial: " + e.getMessage());
+            }
+        }
+	    
 	}
 
 	private static void start(String[] args) throws Exception {

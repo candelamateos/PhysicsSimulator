@@ -22,7 +22,7 @@ public class Utils {
 		return w;
 	}
 
-	static void showErrorMsg(String msg) {
+	public static void showErrorMsg(String msg) {
 		showErrorMsg(null, msg);
 	}
 

@@ -29,6 +29,13 @@
             <version>1.6.0</version>
         </dependency>
 
+        <!-- FlatLaf Look and Feel -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
         <!-- JUnit 5 (Jupiter API & Engine) -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -37,7 +44,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Soporte para import static org.junit.Assert.* en tests -->
+        <!-- Soporte para org.junit.Assert.* -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
@@ -48,7 +55,7 @@
 
     <build>
         <plugins>
-            <!-- Plugin de compilación -->
+            <!-- Plugin de compilacion -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -59,14 +66,14 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin para ejecución de tests unitarios -->
+            <!-- Plugin para ejecucion de tests unitarios -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
             </plugin>
 
-            <!-- Plugin para empaquetar el JAR ejecutable con todas las dependencias -->
+            <!-- Plugin para empaquetar el JAR ejecutable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

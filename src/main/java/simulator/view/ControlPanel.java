@@ -76,8 +76,9 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 	@Override
 	public void onDeltaTimeChanged(double dt) {
-		String delta = Double.toString(dt);
-		this._dt = new JTextField(delta);
+	    if (_dt != null) {
+	        _dt.setText(Double.toString(dt));
+	    }
 	}
 
 	@Override
@@ -137,16 +138,21 @@ public class ControlPanel extends JPanel implements SimulatorObserver {
 
 // Boton run
 		_n = new JSpinner(new SpinnerNumberModel(1000, 1, 10000, 100));
-		int n = (int) _n.getValue();
 		_dt = new JTextField("1000");
-		String sdt = _dt.getText();
-		double dt = Double.parseDouble(sdt);
 
 		_toolaBar.addSeparator();
 		_runButton = new JButton();
 		_runButton.setToolTipText("run");
 		_runButton.setIcon(loadImage("icons/run.png"));
-		_runButton.addActionListener((e) -> run(n, dt));
+		_runButton.addActionListener((e) -> {
+		    try {
+		        int n = (Integer) _n.getValue();
+		        double dt = Double.parseDouble(_dt.getText());
+		        run(n, dt);
+		    } catch (NumberFormatException ex) {
+		        Utils.showErrorMsg("El valor de Delta-Time debe ser un número válido.");
+		    }
+		});
 		_toolaBar.add(_runButton);
 
 // Boton stop
